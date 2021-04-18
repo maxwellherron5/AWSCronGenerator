@@ -56,6 +56,32 @@ func main() {
 		})
 	}
 
+	/* DEFINING API ROUTES */
+
+	// General health test route
+	api.GET("/health", HealthHandler)
+
+	// Convert datetime to cron expression
+	api.POST("/convert/date_to_cron/:inputdate", ConvertToCron)
+
+	// TODO: Convert datetime to rate expression
+
+	// TODO: Convert cron expression to datetime
+
 	// Start and run the server
 	router.Run(port)
+}
+
+func HealthHandler(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Healthy!",
+	})
+}
+
+func ConvertToCron(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ConvertToCron not implemented yet",
+	})
 }
