@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -62,7 +65,7 @@ func main() {
 	api.GET("/health", HealthHandler)
 
 	// Convert datetime to cron expression
-	api.POST("/convert/date_to_cron/:inputdate", ConvertToCron)
+	api.POST("/convert/date_to_cron", ConvertToCron)
 
 	// TODO: Convert datetime to rate expression
 
@@ -81,7 +84,19 @@ func HealthHandler(c *gin.Context) {
 
 func ConvertToCron(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
+	body, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Unable to parse input",
+		})
+	}
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(body), &data)
+	if err != nil {
+		panic(err)
+	}
+	date_string := fmt.Sprintf("%s", data["timestamp"])
 	c.JSON(http.StatusOK, gin.H{
-		"message": "ConvertToCron not implemented yet",
+		"formatted date": date_string,
 	})
 }
