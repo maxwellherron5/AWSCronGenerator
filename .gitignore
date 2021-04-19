@@ -2,3 +2,6 @@
 *.exe
 *.env
 *.sum
+*.exe~
+tmp/
+node_modules/
